@@ -5,35 +5,44 @@ import json
 db = 'history.sqlite'
 out = 'history.json'
 
-def get_table(cursor, table):	
-	c.execute('SELECT * FROM %s' % table)
-	return c.fetchall()
+def _get_table(cursor, table):	
+	cursor.execute('SELECT * FROM %s' % table)
+	return cursor.fetchall()
 
-def combine(a, b):
-	a = map(lambda x: list(x), a)
-	b = map(lambda x: list(x), b)
+def _combine(tables):
+	tables = map(lambda x: map(lambda y: list(y), x), tables)
 
-	for i in xrange(len(a)):
-		for el in b[i]:
-			a[i].append(el)
+	for table in tables[1:]:
+		for i in xrange(len(tables[0])):
+			for el in table[i]:
+				tables[0][i].append(el)
 
-	return a
+	return tables[0]
 
 def _add_keys(keys, values):
 	return map(lambda x: dict(zip(keys, x[:len(keys)])), values)
 
-conn = sqlite3.connect(db)
-c = conn.cursor()
+def json_dumpf(data, filename):
+	with open(filename, 'w') as f:
+		f.write(json.dumps(data))	
 
-times = get_table(c, 'info')
-info = get_table(c, 'pages_content')
+def sqlite_to_json(db_name, tables, keys):
+	if type(tables) != list:
+		tables = [tables]
 
-conn.close()
+	conn = sqlite3.connect(db)
+	c = conn.cursor()
+	tables = map(lambda x: _get_table(c, x), tables)
+	conn.close()
 
-data = combine(times, info)
+	data = _combine(tables)
+	data = _add_keys(keys, data)
+
+	return data
+
+tables = ['info', 'pages_content']
 keys = ['time', 'id', 'url', 'title', 'body']
 
-end = _add_keys(keys, data)
+data = sqlite_to_json(db, tables, keys)
 
-with open(out, 'w') as f:
-	f.write(json.dumps(end))
+json_dumpf(data, out)
