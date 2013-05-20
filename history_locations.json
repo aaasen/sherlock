@@ -1,0 +1,6 @@
+
+{
+	"posix" : {
+		"chrome" : "~/.config/chromium/Default/"
+	}
+}
