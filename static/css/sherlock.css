@@ -1,0 +1,10 @@
+
+div#content {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1#title {
+    border-bottom: 1px solid #000;
+}
