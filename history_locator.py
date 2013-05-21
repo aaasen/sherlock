@@ -21,7 +21,6 @@ class UnsupportedBrowserError(Exception):
         return '%s is not a supported browser; %s are supported' \
             % (self.browser, self.locator._config[self.os_name].keys())
 
-
 class HistoryLocator:
     def __init__(self, config):
         with open(config, 'r') as f:

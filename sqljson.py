@@ -2,11 +2,14 @@
 import sqlite3
 import json
 
-db = 'history.sqlite'
-out = 'history.json'
+def _get_table(cursor, table):
+	try:
+		cursor.execute('SELECT * FROM %s' % table)
+	except sqlite3.OperationalError:
+		print('warning: one history database is locked\n\
+  exit the browser and kill its background processes\n\
+  if you want the most recent data to be included\n')
 
-def _get_table(cursor, table):	
-	cursor.execute('SELECT * FROM %s' % table)
 	return cursor.fetchall()
 
 def _combine(tables):
@@ -22,15 +25,11 @@ def _combine(tables):
 def _add_keys(keys, values):
 	return map(lambda x: dict(zip(keys, x[:len(keys)])), values)
 
-def json_dumpf(data, filename):
-	with open(filename, 'w') as f:
-		f.write(json.dumps(data))	
-
 def sqlite_to_json(db_name, tables, keys):
 	if type(tables) != list:
 		tables = [tables]
 
-	conn = sqlite3.connect(db)
+	conn = sqlite3.connect(db_name)
 	c = conn.cursor()
 	tables = map(lambda x: _get_table(c, x), tables)
 	conn.close()
@@ -39,10 +38,3 @@ def sqlite_to_json(db_name, tables, keys):
 	data = _add_keys(keys, data)
 
 	return data
-
-tables = ['info', 'pages_content']
-keys = ['time', 'id', 'url', 'title', 'body']
-
-data = sqlite_to_json(db, tables, keys)
-
-json_dumpf(data, out)
