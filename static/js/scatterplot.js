@@ -72,12 +72,18 @@ $(document).ready(function () {
 
         var maxVisits = d3.max(visits);
 
-        var barPadding = 4;
+        var barPadding = 10;
 
         var data = counts;
-        var l = data.length;
 
-        console.log(counts);
+        data = data.sort(function(a, b) {
+            a = a["visits"];
+            b = b["visits"];
+            return d3.descending(a, b);
+        });
+
+        data = data.slice(0, 20);
+        var l = data.length;
 
         var svg = d3.select("div#content").append("svg")
             .attr("width", w)
