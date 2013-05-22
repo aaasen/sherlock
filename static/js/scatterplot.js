@@ -8,28 +8,27 @@ $(document).ready(function () {
     var w = 800;
     var h = 800;
 
-    function scatterplot(data) {
-        h = 50;
-
-        var times = data.map(function(x) {
-            return x["time"]
-        });
-
-        var maxTime = d3.max(times)
-        var minTime = d3.min(times)
-        var diffTime = maxTime - minTime;
+    function punchcard(data) {
+        var h = 50;
 
         var svg = d3.select("div#content")
             .append("svg")
             .attr("width", w)
             .attr("height", h);
 
+        var data = data.map(function(x) {
+            return x["time"]
+        });
+
+        var scale = d3.scale.linear()
+            .domain([d3.min(data), d3.max(data)]);
+
         svg.selectAll("circle")
-           .data(data)
-           .enter()
-           .append("circle")
-           .attr("cx", function(d) {
-                return w * ((maxTime - d["time"]) / diffTime);
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d) {
+                return w * scale(d);
             })
             .attr("cy", function(d) {
                 return 10;
@@ -40,7 +39,7 @@ $(document).ready(function () {
     }
 
     function siteFrequency(data) {
-        h = 400;
+        var h = 400;
         var padding = 50;
 
         var domains = data.map(function(x) {
@@ -53,7 +52,7 @@ $(document).ready(function () {
             if (d in counts) {
                 counts[d] += 1;
             } else {
-                counts[d] = 1;                
+                counts[d] = 1;
             }
         });
 
@@ -118,14 +117,13 @@ $(document).ready(function () {
                 return i * (w / data.length) + (w / data.length - barPadding) / 2;
             })
             .attr("y", function(d) {
-                console.log(d);
                 return (h + padding) - ((d["visits"] / maxVisits) * h);
             })
             .attr("text-anchor", "right");
     }
 
     var data = $.getJSON("/data/history.json", function(data) {
-        scatterplot(data);
-        siteFrequency(data);   
+        punchcard(data);
+        siteFrequency(data);
     });
 });
