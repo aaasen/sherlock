@@ -9,33 +9,50 @@ $(document).ready(function () {
     var h = 800;
 
     function punchcard(data) {
-        var h = 50;
+        var h = 400;
 
         var svg = d3.select("div#content")
             .append("svg")
             .attr("width", w)
-            .attr("height", h);
+            .attr("height", h)
+            .attr("id", "punchcard");
 
-        var data = data.map(function(x) {
-            return x["time"]
-        });
+        var xScale = d3.scale.linear()
+            .domain([d3.min(data, function(d) { return d["time"]; }),
+                d3.max(data, function(d) { return d["time"]; })])
+            .range([0, w]);
 
-        var scale = d3.scale.linear()
-            .domain([d3.min(data), d3.max(data)]);
+        var yScale = d3.scale.ordinal()
+            .range(data.map(function(x, i) {
+                    return i;
+                })
+            );
 
         svg.selectAll("circle")
             .data(data)
             .enter()
             .append("circle")
             .attr("cx", function(d) {
-                return w * scale(d);
+                return xScale(d["time"]);
             })
             .attr("cy", function(d) {
-                return 10;
+                return yScale(d["domain"]);
             })
             .attr("r", function(d) {
-                return 1;
-            });
+                return 2;
+            })
+            .attr("fill", function(d) {
+                return("#" + md5(d["domain"]).substring(0, 6));
+            })
+            .attr("url", function(d) { return d["url"]; })
+            .attr("domain", function(d) { return d["domain"]; })
+            .attr("time", function(d) { return d["time"]; });
+    }
+
+    function explainPunchcard() {
+        $("svg#punchcard > circle").mouseover(function() {
+            $("p#point-info").text($(this).attr("domain"));
+        });
     }
 
     function siteFrequency(data) {
@@ -84,6 +101,9 @@ $(document).ready(function () {
         data = data.slice(0, 20);
         var l = data.length;
 
+        // var xScale = d3.scale.linear()
+        //     .domain([0, data.length);
+
         var svg = d3.select("div#content").append("svg")
             .attr("width", w)
             .attr("height", h);
@@ -123,7 +143,13 @@ $(document).ready(function () {
     }
 
     var data = $.getJSON("/data/history.json", function(data) {
+        var data = data.map(function(x) {
+            x["domain"] = getDomain(x["url"]);
+            return x;
+        });
+
         punchcard(data);
-        siteFrequency(data);
+        explainPunchcard();
+        // siteFrequency(data);
     });
 });
