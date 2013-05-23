@@ -11,6 +11,6 @@ $(document).ready(function () {
             return x;
         });
 
-        var punchcard = new Punchcard(data, 800, 600);
+        var punchcard = new Punchcard(data, 800, 400);
     });
 });
