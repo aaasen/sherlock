@@ -18,7 +18,7 @@ Punchcard.prototype.graph = function() {
         .attr("height", this.h)
         .attr("id", "punchcard");
 
-    var xScale = d3.time.scale()
+    var xScale = d3.time.scale.utc()
         .domain([new Date(d3.min(this.data, function(d) { return d["time"] / 10000; })),
             new Date(d3.max(this.data, function(d) { return d["time"] / 10000; }))])
         .rangeRound([0 + this.padding.left, this.w - this.padding.right]);
@@ -32,8 +32,8 @@ Punchcard.prototype.graph = function() {
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient('bottom')
-        .ticks(5)
-        .tickFormat(d3.time.format("%a %B %Y"))
+        .ticks(10)
+        .tickFormat(d3.time.format("%x"))
         .tickSize(0)
         .tickPadding(8);
 
@@ -42,6 +42,7 @@ Punchcard.prototype.graph = function() {
         .enter()
         .append("circle")
         .attr("cx", function(d) {
+            console.log(new Date(Math.round(d["time"] / 10000)));
             return xScale(new Date(Math.round(d["time"] / 10000)));
         })
         .attr("cy", function(d) {
