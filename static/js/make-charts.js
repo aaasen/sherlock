@@ -8,9 +8,12 @@ $(document).ready(function () {
     var data = $.getJSON("/data/history.json", function(data) {
         var data = data.map(function(x) {
             x["domain"] = getDomain(x["url"]);
+            x["time"] = Math.round(x["time"] / 10000);
             return x;
         });
 
-        var punchcard = new Punchcard(data, 800, 400);
+        data = group(data);
+
+        // var punchcard = new Punchcard(data, 800, 400);
     });
 });

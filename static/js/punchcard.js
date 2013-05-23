@@ -19,8 +19,8 @@ Punchcard.prototype.graph = function() {
         .attr("id", "punchcard");
 
     var xScale = d3.time.scale.utc()
-        .domain([new Date(d3.min(this.data, function(d) { return d["time"] / 10000; })),
-            new Date(d3.max(this.data, function(d) { return d["time"] / 10000; }))])
+        .domain([new Date(d3.min(this.data, function(d) { return d["time"]; })),
+            new Date(d3.max(this.data, function(d) { return d["time"]; }))])
         .rangeRound([0 + this.padding.left, this.w - this.padding.right]);
 
     var yScale = d3.scale.ordinal()
@@ -42,8 +42,8 @@ Punchcard.prototype.graph = function() {
         .enter()
         .append("circle")
         .attr("cx", function(d) {
-            console.log(new Date(Math.round(d["time"] / 10000)));
-            return xScale(new Date(Math.round(d["time"] / 10000)));
+            console.log(new Date(d["time"]));
+            return xScale(new Date(d["time"]));
         })
         .attr("cy", function(d) {
             return yScale(d["domain"]);
@@ -66,6 +66,6 @@ Punchcard.prototype.graph = function() {
 
 Punchcard.prototype.explain = function() {
     $("svg#punchcard > circle").mouseover(function() {
-        $("p#point-info").text($(this).attr("domain"));
+        $("pre#point-info").text($(this).attr("domain"));
     });
 }

@@ -25,18 +25,15 @@ code {
 	color: rgb(0, 112, 32);
 	background-color: rgba(0, 0, 0, 0.02);
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 4px;
 	font-size: 14px;
 }
 
 pre {
 	overflow-x: auto;
-	padding: 0px 4px;
 	line-height: 0.8em;
-	padding: 6px 12px;
+	padding: 12px;
 	background-color: rgba(0, 0, 0, 0.02);
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 4px;
 	margin-bottom: 16px;
 }
 
