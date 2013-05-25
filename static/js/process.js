@@ -45,7 +45,5 @@ function group(data) {
         return d3.descending(a["visits"].length, b["visits"].length);
     });
 
-    console.log(grouped);
-
     return grouped;
 }
