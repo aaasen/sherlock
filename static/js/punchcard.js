@@ -12,7 +12,6 @@ function Punchcard(data, w, h) {
 
     this.graph(this.svg);
     this.addKey(this.svg);
-    this.explain();
 }
 
 Punchcard.prototype.graph = function(svg) {
@@ -46,8 +45,8 @@ Punchcard.prototype.graph = function(svg) {
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom")
-        .ticks(10)
-        .tickFormat(d3.time.format("%x"))
+        .ticks(6)
+        .tickFormat(d3.time.format("%X"))
         .tickSize(0)
         .tickPadding(8);
 
@@ -104,10 +103,4 @@ Punchcard.prototype.addKey = function(svg) {
         })
         .attr("text-anchor", "right")
         .attr("class", "key");
-}
-
-Punchcard.prototype.explain = function() {
-    $("svg#punchcard > circle").mouseover(function() {
-        $("pre#point-info").text($(this).attr("domain"));
-    });
 }
