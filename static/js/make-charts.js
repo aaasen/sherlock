@@ -24,7 +24,10 @@ $(document).ready(function () {
     var data = $.getJSON("/data/history.json", function(data) {
         var data = data.map(function(x) {
             x["domain"] = getDomain(x["url"]);
-            x["time"] = Math.round((toEpoch(x["time"]) % 86400000));
+
+            // milliseconds in a day: 86400000
+            // milliseconds in a week: 604800000
+            x["time"] = Math.round((toEpoch(x["time"]) % 604800000));
             return x;
         });
 

@@ -15,8 +15,6 @@ function Punchcard(data, numEntries, w, h) {
 }
 
 Punchcard.prototype.graph = function(svg) {
-
-
     var earliest = new Date(d3.min(this.data, function(d) {
         return d3.min(d["visits"], function(dd) {
             return dd["time"];
@@ -46,7 +44,7 @@ Punchcard.prototype.graph = function(svg) {
         .scale(xScale)
         .orient("bottom")
         .ticks(6)
-        .tickFormat(d3.time.format("%X"))
+        .tickFormat(d3.time.format("%A"))
         .tickSize(0)
         .tickPadding(8);
 
