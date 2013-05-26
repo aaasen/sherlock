@@ -3,20 +3,20 @@ function Punchcard(data, w, h) {
     this.data = data;
     this.w = w;
     this.h = h;
-    this.padding = { top: 32, bottom: 32, right: 32, left: 32 };
+    this.padding = { top: 32, bottom: 32, right: 32, left: 128 };
+    this.svg = d3.select("div#content")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .attr("id", "punchcard");
 
-    this.graph();
+    this.graph(this.svg);
+    this.addKey(this.svg);
     this.explain();
 }
 
-Punchcard.prototype.graph = function() {
-    this.data = this.data.slice(0, 32);
-
-    var svg = d3.select("div#content")
-        .append("svg")
-        .attr("width", this.w)
-        .attr("height", this.h)
-        .attr("id", "punchcard");
+Punchcard.prototype.graph = function(svg) {
+    this.data = this.data.slice(0, 16);
 
     var earliest = new Date(d3.min(this.data, function(d) {
         return d3.min(d["visits"], function(dd) {
@@ -73,10 +73,37 @@ Punchcard.prototype.graph = function() {
             .attr("time", function(d) { return d["time"]; });
     });
 
-    svg.append("g")
+    this.svg.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(0, " + (this.h - this.padding.bottom) + ")")
         .call(xAxis);
+}
+
+Punchcard.prototype.addKey = function(svg) {
+    var pixelsPerSite = (this.h - this.padding.top - this.padding.bottom) / this.data.length;
+    var padding = this.padding;
+
+    var yScale = d3.scale.ordinal()
+        .range(this.data.map(function(x, i) {
+            return padding.top + i * pixelsPerSite;
+        })
+    );
+
+    svg.selectAll("text.key")
+        .data(this.data)
+        .enter()
+        .append("text")
+        .text(function(d) {
+            return d["domain"];
+        })
+        .attr("x", function(d, i) {
+            return 0;
+        })
+        .attr("y", function(d) {
+            return yScale(d["domain"]);
+        })
+        .attr("text-anchor", "right")
+        .attr("class", "key");
 }
 
 Punchcard.prototype.explain = function() {
