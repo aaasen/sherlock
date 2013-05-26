@@ -1,9 +1,9 @@
 
-function Punchcard(data, w, h) {
-    this.data = data;
+function Punchcard(data, numEntries, w, h) {
+    this.data = data.slice(0, numEntries);
     this.w = w;
     this.h = h;
-    this.padding = { top: 32, bottom: 32, right: 32, left: 128 };
+    this.padding = { top: 32, bottom: 32, right: 2, left: 128 };
     this.svg = d3.select("div#content")
         .append("svg")
         .attr("width", w)
@@ -15,7 +15,7 @@ function Punchcard(data, w, h) {
 }
 
 Punchcard.prototype.graph = function(svg) {
-    this.data = this.data.slice(0, 16);
+
 
     var earliest = new Date(d3.min(this.data, function(d) {
         return d3.min(d["visits"], function(dd) {

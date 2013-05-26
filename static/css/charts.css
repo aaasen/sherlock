@@ -7,9 +7,10 @@
 }
 
 .axis text {
-    font-size: 11px;
+    font-size: 12px;
 }
 
 text.key  {
-    font-size: 11px;
+    font-size: 12px;
+    text-align: left;
 }
