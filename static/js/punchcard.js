@@ -34,11 +34,12 @@ Punchcard.prototype.graph = function() {
         .domain([earliest, latest])
         .rangeRound([0 + this.padding.left, this.w - this.padding.right]);
 
-    var pixelsPerSite = this.h / this.data.length;
+    var pixelsPerSite = (this.h - this.padding.top - this.padding.bottom) / this.data.length;
+    var padding = this.padding;
 
     var yScale = d3.scale.ordinal()
         .range(this.data.map(function(x, i) {
-            return i * pixelsPerSite;
+            return padding.top + i * pixelsPerSite;
         })
     );
 
