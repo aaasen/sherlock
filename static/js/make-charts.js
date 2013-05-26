@@ -1,8 +1,14 @@
 
 $(document).ready(function () {
     function getDomain(url) {
-        var a = url.split("/");
-        return a[2];
+        var domain = url.split("/")[2];
+        var parts = domain.split(".");
+
+        if (parts[0] == "www") {
+            parts = parts.slice(1);
+        }
+
+        return parts.join(".");
     }
 
     var data = $.getJSON("/data/history.json", function(data) {
