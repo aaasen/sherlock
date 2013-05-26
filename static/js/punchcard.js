@@ -30,7 +30,7 @@ Punchcard.prototype.graph = function(svg) {
         });
     }));
 
-    var xScale = d3.time.scale.utc()
+    var xScale = d3.time.scale()
         .domain([earliest, latest])
         .rangeRound([0 + this.padding.left, this.w - this.padding.right]);
 
